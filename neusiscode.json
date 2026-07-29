@@ -1,0 +1,17 @@
+{
+  "$schema": "https://neusis.ai/config.json",
+  "mcp": {
+    "project-brain": {
+      "type": "local",
+      "command": [
+        "mcp-project-brain",
+        "stdio",
+        "--kb-repo=neusis-tao-digital/tao-demo-1"
+      ],
+      "enabled": true,
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    }
+  }
+}

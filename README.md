@@ -1,80 +1,66 @@
-# Inventory Management System in PHP
+# Inventory Management System Migration
 
-Welcome to the Inventory Management System, a web application built using PHP to help manage inventory efficiently. This project includes features like adding, updating, and deleting products, managing stock levels, and viewing inventory reports.
+This repository now contains the original PHP inventory management app and the new React + Node.js foundation created for epic `DT-15`.
 
-## Table of Contents
+## DT-15 Scope Delivered
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+The following stories and tasks are implemented:
 
-## Features
+- `DT-19`: Create frontend and backend base projects
+- `DT-20`: Create React app for inventory UI
+- `DT-21`: Create Node.js + Express app for APIs
+- `DT-22`: Configure project folders and environment files
+- `DT-23`: Connect backend to MySQL
+- `DT-24`: Add MySQL connection setup in Node.js
+- `DT-25`: Verify backend can read `user` and `product` tables
+- `DT-26`: Add basic error handling for database failures
 
-- **User Authentication**: Secure login and registration system.
-- **Product Management**: Add, update, delete, and view product details.
-- **Responsive Design**: Compatible with various devices.
+## Project Structure
 
-## Technologies Used
+- `frontend/`: React app bootstrapped with Vite
+- `backend/`: Express API with reusable MySQL connection pool
+- `inventorymanagement.sql`: Existing MySQL schema and seed data
+- `index.html`, `login.php`, `table.php`, `additem.php`, `edit.php`, `delete.php`: Legacy PHP implementation retained for reference during migration
 
-- **Backend**: PHP
-- **Frontend**: HTML, CSS, JavaScript
-- **Database**: MySQL
-- **Frameworks**: Bootstrap
+## Environment Setup
 
-## Installation
+1. Install dependencies:
 
-1. **Clone the repository**
-    ```sh
-    git clone https://github.com/Harsh21Patel/Inventory-Management-System-PHP.git
-    ```
-2. **Navigate to the project directory**
-    ```sh
-    cd Inventory-Management-System-PHP
-    ```
-3. **Set up the database**
-    - Import the `database.sql` file into your MySQL database.
-    - Update the database configuration in `config.php`.
+```sh
+npm install
+```
 
-4. **Start the server**
-    - Use a local server like XAMPP or WAMP and place the project folder in the `htdocs` directory.
-    - Start Apache and MySQL from the control panel.
+2. Create local environment files:
 
-5. **Access the application**
-    - Open your web browser and navigate to `http://localhost/Inventory-Management-System-PHP`.
+```sh
+copy backend\.env.example backend\.env
+copy frontend\.env.example frontend\.env
+```
 
-## Usage
+3. Update `backend/.env` values if your MySQL connection differs from the defaults.
 
-1. **Login**
-    - Access the login page at `http://localhost/Inventory-Management-System-PHP/login.php`.
-    - Use your credentials to log in. If you don’t have an account, register first.
+## Run The New Apps
 
-2. **Manage Products**
-    - Navigate to the product management section to add, update, or delete products.
+Start the backend:
 
-3. **View Inventory**
-    - Check the inventory reports to monitor stock levels and generate insights.
+```sh
+npm run dev:backend
+```
 
-## Screenshot
+Start the frontend in another terminal:
 
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/103490245/248442348-718b818e-9573-4d3b-8f5c-264f724a9f52.png">
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/103490245/248442355-ece11256-af6f-4fc1-8cec-7f4a9cc56a01.png" >
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/103490245/248442356-63ba17aa-1bdc-452b-8415-48766ad4b77f.png" >
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/103490245/248442359-4ee8da6d-cbc5-404b-9639-230d17e76c09.png">
+```sh
+npm run dev:frontend
+```
 
-## Contributing
+## Backend Bootstrap Endpoints
 
-Contributions are welcome! Please follow these steps to contribute:
+- `GET /api/health`: basic API health check
+- `GET /api/bootstrap/tables`: verifies MySQL connectivity and returns sample rows from `user` and `product`
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a pull request.
+If the database is unavailable, the backend returns a safe `503` response with a clear message instead of exposing raw driver errors.
 
-## License
+## Legacy App
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The original PHP implementation is still present and unchanged so the migration can continue incrementally.
 
