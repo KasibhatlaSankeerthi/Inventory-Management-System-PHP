@@ -15,59 +15,30 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 30%),
-    radial-gradient(circle at right, rgba(14, 165, 233, 0.18), transparent 28%),
+    radial-gradient(circle at top, rgba(65, 105, 225, 0.3), transparent 35%),
     linear-gradient(180deg, #09111f 0%, #0f1f3b 100%);
-}
-
-button,
-input {
-  font: inherit;
 }
 
 code {
   font-family: "Cascadia Code", Consolas, monospace;
 }
 
-#root {
-  min-height: 100vh;
-}
-
-.page-shell {
-  min-height: 100vh;
+.app-shell {
   display: grid;
-  place-items: center;
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.hero-card,
+.status-card {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 24px;
   padding: 1.5rem;
-}
-
-.panel {
-  width: min(100%, 480px);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 28px;
-  padding: 2rem;
-  background: rgba(9, 17, 31, 0.76);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
-}
-
-.panel-wide {
-  width: min(100%, 1040px);
-}
-
-.login-panel {
-  position: relative;
-  overflow: hidden;
-}
-
-.login-panel::after {
-  content: '';
-  position: absolute;
-  inset: auto -4rem -4rem auto;
-  width: 12rem;
-  height: 12rem;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.34), rgba(34, 211, 238, 0));
-  pointer-events: none;
+  background: rgba(9, 17, 31, 0.72);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
 }
 
 .eyebrow {
@@ -79,83 +50,22 @@ code {
 }
 
 h1,
+h2,
 p {
   margin-top: 0;
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   margin-bottom: 0.75rem;
 }
 
-.muted-text {
+.intro {
+  max-width: 42rem;
   color: #cbd5e1;
 }
 
-.login-form {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.75rem;
-}
-
-.field-group {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.field-group span {
-  font-size: 0.95rem;
-  color: #dbeafe;
-}
-
-.field-group input {
-  width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 14px;
-  padding: 0.95rem 1rem;
-  color: #eff6ff;
-  background: rgba(15, 23, 42, 0.92);
-  outline: none;
-}
-
-.field-group input:focus {
-  border-color: rgba(56, 189, 248, 0.9);
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.16);
-}
-
-.primary-button,
-.secondary-button {
-  border: 0;
-  border-radius: 14px;
-  padding: 0.95rem 1.1rem;
-  cursor: pointer;
-  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
-}
-
-.primary-button {
-  color: #031525;
-  background: linear-gradient(135deg, #67e8f9 0%, #38bdf8 100%);
-  font-weight: 700;
-}
-
-.secondary-button {
-  color: #e2e8f0;
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-}
-
-.primary-button:hover,
-.secondary-button:hover {
-  transform: translateY(-1px);
-}
-
-.primary-button:disabled {
-  opacity: 0.7;
-  cursor: wait;
-}
-
 .api-panel {
-  position: relative;
   margin-top: 1.5rem;
   display: inline-flex;
   flex-direction: column;
@@ -165,69 +75,28 @@ h1 {
   background: rgba(15, 23, 42, 0.85);
 }
 
-.api-label,
-.status-text {
-  font-size: 0.85rem;
+.api-label {
+  font-size: 0.8rem;
   color: #94a3b8;
 }
 
-.error-text {
+ul {
   margin: 0;
-  color: #fca5a5;
+  padding-left: 1.25rem;
 }
 
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+li + li {
+  margin-top: 0.75rem;
 }
 
-.table-wrap {
-  overflow-x: auto;
-}
-
-.product-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 560px;
-}
-
-.product-table th,
-.product-table td {
-  text-align: left;
-  padding: 0.95rem 1rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
-}
-
-.product-table th {
-  color: #7dd3fc;
-  font-size: 0.84rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.product-table tbody tr:hover {
-  background: rgba(15, 23, 42, 0.5);
-}
-
-@media (max-width: 720px) {
-  .page-shell {
-    padding: 1rem;
-  }
-
-  .panel {
+@media (max-width: 640px) {
+  .app-shell {
     padding: 1.25rem;
-    border-radius: 22px;
   }
 
-  .panel-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .secondary-button {
-    width: 100%;
+  .hero-card,
+  .status-card {
+    padding: 1.25rem;
+    border-radius: 20px;
   }
 }
