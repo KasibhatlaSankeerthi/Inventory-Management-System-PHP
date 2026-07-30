@@ -22,4 +22,6 @@ export const env = {
   dbPassword: process.env.DB_PASSWORD || '',
   dbName: process.env.DB_NAME || 'inventorymanagement',
   dbConnectionLimit: toNumber(process.env.DB_CONNECTION_LIMIT, 10),
+  jwtSecret: process.env.JWT_SECRET || 'change-this-secret',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
 };
