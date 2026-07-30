@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
-const authStorageKey = 'ims-auth-user';
+const authStorageKey = 'ims-auth-session';
 
-function readStoredUser() {
+function readStoredSession() {
   const storedValue = window.sessionStorage.getItem(authStorageKey);
 
   if (!storedValue) {
@@ -12,14 +12,21 @@ function readStoredUser() {
   }
 
   try {
-    return JSON.parse(storedValue);
+    const parsedValue = JSON.parse(storedValue);
+
+    if (!parsedValue?.token || !parsedValue?.user) {
+      window.sessionStorage.removeItem(authStorageKey);
+      return null;
+    }
+
+    return parsedValue;
   } catch {
     window.sessionStorage.removeItem(authStorageKey);
     return null;
   }
 }
 
-function ProductPage({ user, onLogout }) {
+function ProductPage({ authSession, onLogout, productsError }) {
   return (
     <main className="page-shell product-shell">
       <section className="product-card">
@@ -39,24 +46,21 @@ function ProductPage({ user, onLogout }) {
 
         <div className="product-panel">
           <span className="api-label">Signed in as</span>
-          <strong>{user.email}</strong>
+          <strong>{authSession.user.email}</strong>
         </div>
 
-        <div className="product-panel">
-          <span className="api-label">Next migration step</span>
-          <p>Connect this page to the upcoming product APIs to render the live inventory table.</p>
-        </div>
+        {productsError ? <p className="form-error">{productsError}</p> : null}
       </section>
     </main>
   );
 }
 
-function ProtectedProductRoute({ user, onLogout }) {
-  if (!user) {
-    return <Navigate to="/login" replace />;
+function ProtectedProductRoute({ authSession, onLogout, productsError }) {
+  if (!authSession) {
+    return <Navigate to="/login" replace state={{ authError: 'Please sign in to access products.' }} />;
   }
 
-  return <ProductPage user={user} onLogout={onLogout} />;
+  return <ProductPage authSession={authSession} onLogout={onLogout} productsError={productsError} />;
 }
 
 function LoginPage({
@@ -87,18 +91,17 @@ function LoginPage({
           <h2>Login</h2>
           <p className="form-copy">Use the same email and password stored in the existing `user` table.</p>
 
-          <form className="login-form" onSubmit={onSubmit}>
+          <form className="login-form" onSubmit={onSubmit} noValidate>
             <label className="field-group" htmlFor="email">
               <span>Email</span>
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 autoComplete="email"
                 value={formState.email}
                 onChange={onChange}
                 placeholder="admin@apple.com"
-                required
               />
             </label>
 
@@ -112,7 +115,6 @@ function LoginPage({
                 value={formState.password}
                 onChange={onChange}
                 placeholder="Enter your password"
-                required
               />
             </label>
 
@@ -130,20 +132,86 @@ function LoginPage({
 
 export default function App() {
   const [formState, setFormState] = useState({ email: '', password: '' });
-  const [user, setUser] = useState(null);
+  const [authSession, setAuthSession] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [productsError, setProductsError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    setUser(readStoredUser());
+    setAuthSession(readStoredSession());
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (authSession) {
       navigate('/products', { replace: true });
     }
-  }, [navigate, user]);
+  }, [authSession, navigate]);
+
+  useEffect(() => {
+    const routeAuthError = location.state?.authError;
+
+    if (location.pathname === '/login' && routeAuthError) {
+      setErrorMessage(routeAuthError);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadProducts() {
+      if (!authSession?.token) {
+        setProductsError('');
+        return;
+      }
+
+      setProductsError('');
+
+      try {
+        const response = await fetch(`${apiBaseUrl}/products`, {
+          headers: {
+            Authorization: `Bearer ${authSession.token}`,
+          },
+        });
+
+        if (response.status === 401) {
+          if (!isActive) {
+            return;
+          }
+
+          window.sessionStorage.removeItem(authStorageKey);
+          setAuthSession(null);
+          setProductsError('Your session has expired. Please sign in again.');
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+
+          if (!isActive) {
+            return;
+          }
+
+          setProductsError(payload.error || payload.message || 'Unable to load product data.');
+        }
+      } catch {
+        if (!isActive) {
+          return;
+        }
+
+        setProductsError('Unable to load product data. Check that the API server is running.');
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      isActive = false;
+    };
+  }, [apiBaseUrl, authSession, navigate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -155,6 +223,10 @@ export default function App() {
 
     if (errorMessage) {
       setErrorMessage('');
+    }
+
+    if (productsError) {
+      setProductsError('');
     }
   }
 
@@ -178,12 +250,18 @@ export default function App() {
       const payload = await response.json();
 
       if (!response.ok) {
-        setErrorMessage(payload.message || 'Login failed.');
+        setErrorMessage(payload.error || payload.message || 'Login failed.');
         return;
       }
 
-      window.sessionStorage.setItem(authStorageKey, JSON.stringify(payload.user));
-      setUser(payload.user);
+      const nextAuthSession = {
+        token: payload.token,
+        user: payload.user,
+      };
+
+      window.sessionStorage.setItem(authStorageKey, JSON.stringify(nextAuthSession));
+      setAuthSession(nextAuthSession);
+      setProductsError('');
       setFormState({ email: '', password: '' });
       navigate('/products', { replace: true });
     } catch {
@@ -195,8 +273,9 @@ export default function App() {
 
   function handleLogout() {
     window.sessionStorage.removeItem(authStorageKey);
-    setUser(null);
+    setAuthSession(null);
     setErrorMessage('');
+    setProductsError('');
     navigate('/login', { replace: true });
   }
 
@@ -205,7 +284,7 @@ export default function App() {
       <Route
         path="/login"
         element={
-          user ? (
+          authSession ? (
             <Navigate to="/products" replace />
           ) : (
             <LoginPage
@@ -219,8 +298,17 @@ export default function App() {
           )
         }
       />
-      <Route path="/products" element={<ProtectedProductRoute user={user} onLogout={handleLogout} />} />
-      <Route path="*" element={<Navigate to={user ? '/products' : '/login'} replace />} />
+      <Route
+        path="/products"
+        element={
+          <ProtectedProductRoute
+            authSession={authSession}
+            onLogout={handleLogout}
+            productsError={productsError}
+          />
+        }
+      />
+      <Route path="*" element={<Navigate to={authSession ? '/products' : '/login'} replace />} />
     </Routes>
   );
 }

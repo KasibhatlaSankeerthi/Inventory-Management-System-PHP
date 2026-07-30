@@ -1,4 +1,6 @@
 import { query } from '../db/pool.js';
+import { env } from '../config/env.js';
+import jwt from 'jsonwebtoken';
 
 function normalizeEmail(email) {
   return email.trim().toLowerCase();
@@ -11,7 +13,14 @@ export async function login(req, res, next) {
 
     if (!email || !password) {
       res.status(400).json({
-        message: 'Email and password are required.',
+        error: 'Email and password are required.',
+      });
+      return;
+    }
+
+    if (!email.includes('@')) {
+      res.status(400).json({
+        error: 'A valid email address is required.',
       });
       return;
     }
@@ -25,13 +34,25 @@ export async function login(req, res, next) {
 
     if (!user || user.password !== password) {
       res.status(401).json({
-        message: 'Invalid email or password.',
+        error: 'Invalid email or password.',
       });
       return;
     }
 
+    const token = jwt.sign(
+      {
+        sub: user.id,
+        email: user.email,
+      },
+      env.jwtSecret,
+      {
+        expiresIn: env.jwtExpiresIn,
+      },
+    );
+
     res.json({
       message: 'Login successful.',
+      token,
       user: {
         id: user.id,
         email: user.email,
