@@ -4,6 +4,7 @@ import { env } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import bootstrapRoutes from './routes/bootstrapRoutes.js';
+import productsRoutes from './routes/productsRoutes.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/api', authRoutes);
 app.use('/api', bootstrapRoutes);
+app.use('/api', productsRoutes);
 
 app.use(errorHandler);
 

@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   return (
     <main className="auth-shell">
-      <form className="auth-card" onSubmit={handleSubmit}>
+      <form className="auth-card" onSubmit={handleSubmit} noValidate>
         <p className="eyebrow">Inventory Management</p>
         <h1>Log in</h1>
 
@@ -45,7 +45,10 @@ export default function LoginPage() {
           <input
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setError('');
+            }}
             autoComplete="username"
             required
           />
@@ -56,7 +59,10 @@ export default function LoginPage() {
           <input
             type="password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setError('');
+            }}
             autoComplete="current-password"
             required
           />

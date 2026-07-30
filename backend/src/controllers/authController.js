@@ -5,8 +5,13 @@ import { query } from '../db/pool.js';
 export async function login(req, res, next) {
   const { email, password } = req.body ?? {};
 
-  if (!email || !password) {
+  if (!email || typeof email !== 'string' || !email.trim() || !password || typeof password !== 'string' || !password.trim()) {
     res.status(400).json({ message: 'Email and password are required.' });
+    return;
+  }
+
+  if (!email.includes('@')) {
+    res.status(400).json({ message: 'Email must be a valid email address.' });
     return;
   }
 
