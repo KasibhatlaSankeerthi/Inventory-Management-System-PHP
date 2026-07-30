@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4001/api';
 const loginPath = '/';
 const productPath = '/products';
 

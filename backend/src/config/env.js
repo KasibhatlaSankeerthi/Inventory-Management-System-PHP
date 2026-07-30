@@ -14,8 +14,8 @@ const toNumber = (value, fallback) => {
 };
 
 export const env = {
-  port: toNumber(process.env.PORT, 4000),
-  clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  port: toNumber(process.env.PORT, 4001),
+  clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
   dbHost: process.env.DB_HOST || 'localhost',
   dbPort: toNumber(process.env.DB_PORT, 3306),
   dbUser: process.env.DB_USER || 'root',
