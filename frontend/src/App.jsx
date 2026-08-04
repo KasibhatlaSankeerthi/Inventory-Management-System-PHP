@@ -1,36 +1,32 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
-
-const setupItems = [
-  'React app scaffolded with Vite',
-  'Environment template added for frontend API configuration',
-  'Backend diagnostics endpoints available for MySQL verification',
-];
+import { useState } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage.jsx';
+import ProductsPage from './pages/ProductsPage.jsx';
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  function handleLoginSuccess(authenticatedUser) {
+    setUser(authenticatedUser);
+    // replace: true keeps the submitted login form out of session history.
+    navigate('/products', { replace: true });
+  }
+
+  function handleSignOut() {
+    setUser(null);
+    navigate('/login', { replace: true });
+  }
+
   return (
-    <main className="app-shell">
-      <section className="hero-card">
-        <p className="eyebrow">DT-15 Project Setup</p>
-        <h1>Inventory Management UI</h1>
-        <p className="intro">
-          The React frontend is ready for the authentication and product management
-          migration work.
-        </p>
-
-        <div className="api-panel">
-          <span className="api-label">Configured API base URL</span>
-          <code>{apiBaseUrl}</code>
-        </div>
-      </section>
-
-      <section className="status-card">
-        <h2>Bootstrap Status</h2>
-        <ul>
-          {setupItems.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
-    </main>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+      <Route
+        path="/products"
+        element={<ProductsPage user={user} onSignOut={handleSignOut} />}
+      />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }

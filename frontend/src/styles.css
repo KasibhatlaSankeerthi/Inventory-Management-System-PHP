@@ -89,14 +89,106 @@ li + li {
   margin-top: 0.75rem;
 }
 
+.auth-shell {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 2rem 1.25rem;
+}
+
+.auth-card {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 26rem;
+  padding: 2rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 24px;
+  background: rgba(9, 17, 31, 0.72);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+}
+
+.auth-card h1 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  margin-bottom: 0;
+}
+
+.auth-intro {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.field input {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5eefb;
+  font: inherit;
+}
+
+.field input:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 1px;
+}
+
+.form-error {
+  margin: 0;
+  color: #fca5a5;
+  font-size: 0.9rem;
+}
+
+.primary-button {
+  justify-self: start;
+  padding: 0.75rem 1.4rem;
+  border: 0;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #f8fafc;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.primary-link {
+  color: #7dd3fc;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  border-radius: 16px;
+  color: #94a3b8;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 1.25rem;
   }
 
   .hero-card,
-  .status-card {
+  .status-card,
+  .auth-card {
     padding: 1.25rem;
     border-radius: 20px;
+  }
+
+  .primary-button {
+    justify-self: stretch;
+    text-align: center;
   }
 }
