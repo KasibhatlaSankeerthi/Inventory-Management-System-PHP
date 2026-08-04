@@ -89,6 +89,48 @@ li + li {
   margin-top: 0.75rem;
 }
 
+.login-form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 24rem;
+  margin-top: 1.5rem;
+}
+
+.login-form label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.login-form input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5eefb;
+  font-size: 1rem;
+}
+
+.login-form button {
+  margin-top: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: none;
+  background: #4169e1;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #fca5a5;
+  margin: 0;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 1.25rem;
