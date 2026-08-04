@@ -10,6 +10,12 @@
     "dev:frontend": "npm --workspace frontend run dev",
     "dev:backend": "npm --workspace backend run dev",
     "build:frontend": "npm --workspace frontend run build",
-    "start:backend": "npm --workspace backend run start"
+    "start:backend": "npm --workspace backend run start",
+    "test:backend": "npm --workspace backend run test",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "playwright": "^1.62.1"
   }
 }
