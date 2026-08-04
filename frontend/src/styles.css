@@ -23,22 +23,17 @@ code {
   font-family: "Cascadia Code", Consolas, monospace;
 }
 
-.app-shell {
-  display: grid;
-  gap: 1.5rem;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 3rem 1.25rem;
+button,
+input {
+  font: inherit;
 }
 
-.hero-card,
-.status-card {
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 24px;
+.auth-layout,
+.product-layout {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
   padding: 1.5rem;
-  background: rgba(9, 17, 31, 0.72);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
 }
 
 .eyebrow {
@@ -50,53 +45,87 @@ code {
 }
 
 h1,
-h2,
 p {
   margin-top: 0;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   margin-bottom: 0.75rem;
 }
 
 .intro {
-  max-width: 42rem;
+  max-width: 32rem;
   color: #cbd5e1;
 }
 
-.api-panel {
+.auth-panel,
+.product-panel {
+  width: min(100%, 460px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 24px;
+  padding: 2rem;
+  background: rgba(9, 17, 31, 0.78);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+}
+
+.login-form {
+  display: grid;
+  gap: 1rem;
   margin-top: 1.5rem;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.85rem 1rem;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.85);
 }
 
-.api-label {
-  font-size: 0.8rem;
-  color: #94a3b8;
+.field-group {
+  display: grid;
+  gap: 0.5rem;
+  color: #dbeafe;
 }
 
-ul {
+.field-group span {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.field-group input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+}
+
+.field-group input:focus {
+  outline: 2px solid rgba(125, 211, 252, 0.65);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.form-error {
   margin: 0;
-  padding-left: 1.25rem;
+  color: #fca5a5;
 }
 
-li + li {
-  margin-top: 0.75rem;
+.submit-button {
+  border: 0;
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  color: #eff6ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 @media (max-width: 640px) {
-  .app-shell {
-    padding: 1.25rem;
-  }
-
-  .hero-card,
-  .status-card {
-    padding: 1.25rem;
+  .auth-panel,
+  .product-panel {
+    padding: 1.5rem;
     border-radius: 20px;
   }
 }
